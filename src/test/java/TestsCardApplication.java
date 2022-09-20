@@ -12,6 +12,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestsCardApplication {
     private WebDriver driver;
@@ -40,6 +41,35 @@ public class TestsCardApplication {
         driver.findElement(By.className("button")).click();
         String text = driver.findElement(By.className("Success_successBlock__2L3Cw")).getText();
         assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", text.trim());
+    }
+
+    @Test
+    void badNameTest() {
+        driver.get("http://localhost:9999");
+        driver.findElement(By.cssSelector("span[data-test-id='name'] input")).sendKeys("Test Testov");
+        driver.findElement(By.cssSelector("span[data-test-id='phone'] input")).sendKeys("+79131234567");
+        driver.findElement(By.className("checkbox__box")).click();
+        driver.findElement(By.className("button")).click();
+        assertNotNull(driver.findElement(By.className("input_invalid")).getText());
+    }
+
+    @Test
+    void badPhoneTest(){
+        driver.get("http://localhost:9999");
+        driver.findElement(By.cssSelector("span[data-test-id='name'] input")).sendKeys("Тест Тестов");
+        driver.findElement(By.cssSelector("span[data-test-id='phone'] input")).sendKeys("+7913123456");
+        driver.findElement(By.className("checkbox__box")).click();
+        driver.findElement(By.className("button")).click();
+        assertNotNull(driver.findElement(By.className("input_invalid")).getText());
+    }
+
+    @Test
+    void withoutAgreementTest(){
+        driver.get("http://localhost:9999");
+        driver.findElement(By.cssSelector("span[data-test-id='name'] input")).sendKeys("Тест Тестов");
+        driver.findElement(By.cssSelector("span[data-test-id='phone'] input")).sendKeys("+7913123456");
+        driver.findElement(By.className("button")).click();
+        assertNotNull(driver.findElement(By.className("input_invalid")).getText());
     }
 
 
